@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import Card from "./components/Card";
+import ron from "./images/ron.png";
+import Footer from "./components/Footer";
 
-function App() {
+export default function App() {
+  const [quotes, setQuotes] = useState([]);
+
+  async function getQuote() {
+    const url = "https://ron-swanson-quotes.herokuapp.com/v2/quotes";
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+      const newQuote = data[0];
+      console.log(data[0]);
+      setQuotes((prevQuotes) => {
+        return [...prevQuotes, newQuote];
+      });
+      window.scrollTo(0, document.body.scrollHeight);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+ 
+  useEffect(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+  }, [quotes]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="main-container">
+        <img src={ron} alt="Ron Swanson" className="ron-img" />
+        <h1>Ron Swanson Quotes</h1>
+        <button className="btn" onClick={getQuote}>Generate Quote</button>
+        <div className="card-container">
+          {quotes.map((quote, index) => (
+            <Card quote={quote} color={index} key={index} />
+          ))}
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }
 
-export default App;
