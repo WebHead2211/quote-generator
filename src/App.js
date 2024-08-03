@@ -15,7 +15,6 @@ export default function App() {
       }
       const data = await response.json();
       const newQuote = data[0];
-      console.log(data);
       quotes.forEach(quote => {
         if(quote == newQuote) {
           return;
