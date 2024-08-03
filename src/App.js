@@ -15,23 +15,27 @@ export default function App() {
       }
       const data = await response.json();
       const newQuote = data[0];
-      quotes.forEach(quote => {
-        if(quote == newQuote) {
-          getQuote();
+      let sameQuote = false;
+      quotes.forEach((quote) => {
+        if (quote == newQuote) {
+          sameQuote = true;
         }
-      })
-      setQuotes((prevQuotes) => {
-        return [...prevQuotes, newQuote];
       });
-      window.scrollTo(0, document.body.scrollHeight);
+      if (!sameQuote) {
+        setQuotes((prevQuotes) => {
+          return [...prevQuotes, newQuote];
+        });
+        window.scrollTo(0, document.body.scrollHeight);
+      } else {
+        getQuote();
+      }
     } catch (error) {
       console.error(error.message);
     }
   }
- 
-  useEffect(() => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
+  useEffect(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   }, [quotes]);
 
   return (
@@ -39,7 +43,9 @@ export default function App() {
       <div className="main-container">
         <img src={ron} alt="Ron Swanson" className="ron-img" />
         <h1>Ron Swanson Quotes</h1>
-        <button className="btn" onClick={getQuote}>Generate Quote</button>
+        <button className="btn" onClick={getQuote}>
+          Generate Quote
+        </button>
         <div className="card-container">
           {quotes.map((quote, index) => (
             <Card quote={quote} color={index} key={index} />
@@ -50,4 +56,3 @@ export default function App() {
     </>
   );
 }
-
