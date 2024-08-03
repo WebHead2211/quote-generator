@@ -17,7 +17,7 @@ export default function App() {
       const newQuote = data[0];
       quotes.forEach(quote => {
         if(quote == newQuote) {
-          return;
+          getQuote();
         }
       })
       setQuotes((prevQuotes) => {
